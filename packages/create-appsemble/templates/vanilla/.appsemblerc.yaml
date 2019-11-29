@@ -1,0 +1,4 @@
+actions:
+  onClick: {}
+
+output: dist

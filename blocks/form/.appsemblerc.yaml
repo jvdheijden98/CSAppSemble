@@ -1,0 +1,10 @@
+types:
+  file: block.ts
+  parameters: Parameters
+
+actions:
+  onSubmit:
+    required: true
+  onSubmitSuccess: {}
+
+output: dist

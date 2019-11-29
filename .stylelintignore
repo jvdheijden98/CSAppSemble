@@ -1,0 +1,6 @@
+*
+!*/
+!*.css
+/coverage/
+/dist/
+/public/

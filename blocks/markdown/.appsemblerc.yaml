@@ -1,0 +1,5 @@
+types:
+  file: src/index.ts
+  parameters: BlockParameters
+
+output: dist

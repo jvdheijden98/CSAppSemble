@@ -1,0 +1,128 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appsemble.fullname" . }}
+  labels:
+    app: {{ .Values.app }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "appsemble.name" . }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    helm.sh/chart: {{ include "appsemble.chart" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ include "appsemble.name" . }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ include "appsemble.name" . }}
+    spec:
+      enableServiceLinks: false
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ include "appsemble.tag" . }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args: ['start', '-vv']
+          ports:
+            - name: http
+              containerPort: 9999
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: DATABASE_HOST
+              value: {{ .Values.postgresql.fullnameOverride }}
+            {{ if .Values.postgresSSL }}
+            - name: DATABASE_SSL
+              value: 'true'
+            {{ end }}
+            - name: DATABASE_PORT
+              value: {{ .Values.global.postgresql.servicePort | quote }}
+            - name: DATABASE_NAME
+              value: {{ .Values.global.postgresql.postgresqlDatabase }}
+            - name: DATABASE_USER
+              value: {{ .Values.global.postgresql.postgresqlUsername }}
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.postgresql.existingSecret }}
+                  key: postgresql-password
+            - name: HOST
+              {{ if .Values.ingress.enabled -}}
+              value: {{ include "appsemble.protocol" $ }}{{ .Values.ingress.host }}
+              {{- else }}
+              value: http://{{ include "appsemble.fullname" . }}
+              {{- end }}
+            {{ if .Values.ingress.enabled -}}
+            - name: APP_DOMAIN_STRATEGY
+              value: kubernetes-ingress
+            - name: INGRESS_NAME
+              value: {{ include "appsemble.fullname" . }}
+            - name: INGRESS_SERVICE_NAME
+              value: {{ include "appsemble.fullname" . }}
+            - name: INGRESS_SERVICE_PORT
+              value: {{ .Values.service.port | quote }}
+            {{- end }}
+            {{- with .Values.smtpSecret }}
+            - name: SMTP_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ . | quote }}
+                  key: host
+            - name: SMTP_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ . | quote }}
+                  key: port
+            - name: SMTP_SECURE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ . | quote }}
+                  key: secure
+            - name: SMTP_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ . | quote }}
+                  key: user
+            - name: SMTP_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ . | quote }}
+                  key: pass
+            - name: SMTP_FROM
+              valueFrom:
+                secretKeyRef:
+                  name: {{ . | quote }}
+                  key: from
+            {{- end }}
+            {{- with .Values.sentrySecret }}
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ . | quote }}
+                  key: dsn
+            {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

@@ -1,0 +1,4 @@
+/.docz
+/config/charts/*/templates
+dist/
+/coverage/

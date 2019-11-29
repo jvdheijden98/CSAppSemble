@@ -1,0 +1,9 @@
+types:
+  parameters: Parameters
+
+actions:
+  onLoad:
+    required: true
+layout: static
+
+output: dist

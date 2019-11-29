@@ -1,0 +1,5 @@
+actions:
+  onLoad:
+    required: true
+
+output: dist

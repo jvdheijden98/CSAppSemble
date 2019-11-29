@@ -1,0 +1,11 @@
+types:
+  parameters: BlockParameters
+
+actions:
+  onButtonClick: {}
+  onAvatarClick: {}
+  onLoad: {}
+  onSubmitReply: {}
+  onLoadReply: {}
+
+output: dist

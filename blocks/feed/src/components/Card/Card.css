@@ -1,0 +1,71 @@
+.root {
+  margin: 10px;
+}
+
+.avatarIcon {
+  align-items: center;
+  border-radius: 50%;
+  display: flex;
+}
+
+.avatarIcon > * {
+  flex: auto;
+}
+
+.button {
+  margin-bottom: 15px;
+  margin-top: -10px;
+}
+
+.content {
+  padding: 1rem;
+}
+
+.figure {
+  align-items: center;
+  background-color: hsl(0, 0%, 96%);
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  vertical-align: baseline;
+  width: 100%;
+}
+
+.image {
+  max-height: 16vh;
+  position: relative;
+}
+
+.images {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+}
+
+.images > .figure {
+  margin: 5px;
+}
+
+.location {
+  height: 128px;
+  max-height: 12vh;
+}
+
+.media {
+  align-items: center;
+}
+
+.replies {
+  max-height: 12rem;
+  overflow-y: auto;
+}
+
+.replyForm {
+  display: flex;
+  padding: 8px 0;
+}
+
+.replyButton {
+  border-radius: 50%;
+  margin-left: 4px;
+}

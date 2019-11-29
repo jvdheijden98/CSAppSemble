@@ -1,0 +1,15 @@
+:not(.fas) {
+  font-family: var(--font-family) !important;
+}
+
+:global(.leaflet-container) {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+}
+
+:global(.leaflet-interactive) {
+  cursor: pointer;
+  height: 50px;
+}

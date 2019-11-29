@@ -1,0 +1,14 @@
+.float {
+  position: fixed;
+  z-index: 1100;
+}
+
+.static {
+  flex: 0 0 auto;
+  position: relative;
+}
+
+.grow {
+  flex: 1 1 auto;
+  position: relative;
+}

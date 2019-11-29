@@ -1,0 +1,10 @@
+types:
+  parameters: Parameters
+
+actions:
+  onLoad:
+    required: true
+  onClick:
+    required: false
+
+output: dist
